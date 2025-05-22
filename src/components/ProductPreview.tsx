@@ -1,9 +1,8 @@
 
 import React, { Suspense, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, useGLTF, Environment } from '@react-three/drei';
+import { OrbitControls, Environment, Text as DreiText } from '@react-three/drei';
 import { Skeleton } from '@/components/ui/skeleton';
-import Text from '@/components/Text';
 import * as THREE from 'three';
 
 interface ProductPreviewProps {
@@ -56,14 +55,16 @@ const Model = ({ productType, customImage, customText }: ProductPreviewProps) =>
       {customText && (
         <mesh position={[0, -0.6, 0.51]}>
           <planeGeometry args={[0.8, 0.2]} />
-          <meshBasicMaterial color="transparent" />
-          <Text 
+          <meshBasicMaterial opacity={0} transparent />
+          <DreiText 
             position={[0, 0, 0.01]} 
             fontSize={0.05}
             color="black"
+            anchorX="center"
+            anchorY="middle"
           >
             {customText}
-          </Text>
+          </DreiText>
         </mesh>
       )}
     </group>
