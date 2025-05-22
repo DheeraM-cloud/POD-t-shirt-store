@@ -14,50 +14,41 @@ interface ProductPreviewProps {
 // 3D Model component
 const Model = ({ productType, customImage, customText }: ProductPreviewProps) => {
   const group = useRef<THREE.Group>(null);
-  let modelPath = '';
   
-  // We would have different model paths for different product types
-  // For now, we'll use placeholders
-  switch (productType) {
-    case 'tshirt':
-      modelPath = '/models/shirt.glb'; // This is a placeholder path
-      break;
-    case 'hoodie':
-      modelPath = '/models/hoodie.glb'; // This is a placeholder path
-      break;
-    case 'sleevie':
-      modelPath = '/models/sleevie.glb'; // This is a placeholder path
-      break;
-    case 'cap':
-      modelPath = '/models/cap.glb'; // This is a placeholder path
-      break;
-    default:
-      modelPath = '/models/shirt.glb';
-  }
+  // Different colors for different product types
+  const getProductColor = () => {
+    switch (productType) {
+      case 'tshirt': return 'white';
+      case 'hoodie': return 'gray';
+      case 'sleevie': return 'lightblue';
+      case 'cap': return 'red';
+      default: return 'white';
+    }
+  };
   
   // Since we don't have actual models, we'll render a placeholder
   return (
     <group ref={group}>
       <mesh>
         <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial 
-          color={productType === 'tshirt' ? 'white' : 
-                 productType === 'hoodie' ? 'gray' : 
-                 productType === 'sleevie' ? 'lightblue' : 'red'} 
-        />
+        <meshStandardMaterial color={getProductColor()} />
       </mesh>
+      
       {customImage && (
         <mesh position={[0, 0, 0.51]}>
           <planeGeometry args={[0.8, 0.8]} />
-          <meshBasicMaterial map={new THREE.TextureLoader().load(customImage)} transparent />
+          <meshBasicMaterial>
+            <primitive attach="map" object={new THREE.TextureLoader().load(customImage)} />
+          </meshBasicMaterial>
         </mesh>
       )}
+      
       {customText && (
         <mesh position={[0, -0.6, 0.51]}>
           <planeGeometry args={[0.8, 0.2]} />
-          <meshBasicMaterial opacity={0} transparent />
-          <DreiText 
-            position={[0, 0, 0.01]} 
+          <meshStandardMaterial color="white" opacity={0.5} transparent />
+          <DreiText
+            position={[0, 0, 0.01]}
             fontSize={0.05}
             color="black"
             anchorX="center"
