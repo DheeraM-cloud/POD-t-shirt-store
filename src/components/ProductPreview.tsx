@@ -1,7 +1,7 @@
 
 import React, { Suspense, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Environment, Text as DreiText } from '@react-three/drei';
+import { OrbitControls, Environment, Text } from '@react-three/drei';
 import { Skeleton } from '@/components/ui/skeleton';
 import * as THREE from 'three';
 
@@ -26,7 +26,6 @@ const Model = ({ productType, customImage, customText }: ProductPreviewProps) =>
     }
   };
   
-  // Since we don't have actual models, we'll render a placeholder
   return (
     <group ref={group}>
       <mesh>
@@ -43,11 +42,11 @@ const Model = ({ productType, customImage, customText }: ProductPreviewProps) =>
         </mesh>
       )}
       
-      {customText && (
+      {customText && customText.length > 0 && (
         <mesh position={[0, -0.6, 0.51]}>
           <planeGeometry args={[0.8, 0.2]} />
           <meshStandardMaterial color="white" opacity={0.5} transparent />
-          <DreiText
+          <Text
             position={[0, 0, 0.01]}
             fontSize={0.05}
             color="black"
@@ -55,7 +54,7 @@ const Model = ({ productType, customImage, customText }: ProductPreviewProps) =>
             anchorY="middle"
           >
             {customText}
-          </DreiText>
+          </Text>
         </mesh>
       )}
     </group>
@@ -89,7 +88,7 @@ export const ProductPreview = ({
         <ul className="text-sm text-gray-600 space-y-1">
           <li>Product: {productType}</li>
           <li>Custom design: {customImage ? 'Yes' : 'No'}</li>
-          <li>Custom text: {customText ? 'Yes' : 'No'}</li>
+          <li>Custom text: {customText && customText.length > 0 ? 'Yes' : 'No'}</li>
         </ul>
       </div>
     </div>

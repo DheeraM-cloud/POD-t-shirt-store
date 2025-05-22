@@ -8,13 +8,23 @@ interface TextCustomizerProps {
 }
 
 export const TextCustomizer = ({ text, onTextChange }: TextCustomizerProps) => {
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    // Limit to 3 lines max
+    const lines = e.target.value.split('\n');
+    if (lines.length <= 3) {
+      onTextChange(e.target.value);
+    } else {
+      onTextChange(lines.slice(0, 3).join('\n'));
+    }
+  };
+
   return (
     <div className="bg-white p-4 rounded-lg shadow">
       <h2 className="text-xl font-medium mb-4">Add Custom Text</h2>
       <Textarea
         placeholder="Enter text to print on your product (max 3 lines)"
         value={text}
-        onChange={(e) => onTextChange(e.target.value)}
+        onChange={handleTextChange}
         className="w-full"
         rows={3}
       />
