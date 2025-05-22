@@ -3,6 +3,8 @@ import React, { Suspense, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useGLTF, Environment } from '@react-three/drei';
 import { Skeleton } from '@/components/ui/skeleton';
+import Text from '@/components/Text';
+import * as THREE from 'three';
 
 interface ProductPreviewProps {
   productType: 'tshirt' | 'hoodie' | 'sleevie' | 'cap';
@@ -12,7 +14,7 @@ interface ProductPreviewProps {
 
 // 3D Model component
 const Model = ({ productType, customImage, customText }: ProductPreviewProps) => {
-  const group = useRef();
+  const group = useRef<THREE.Group>(null);
   let modelPath = '';
   
   // We would have different model paths for different product types
