@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -88,6 +89,36 @@
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
+
+  .colorful {
+    --background: 280 50% 95%;
+    --foreground: 280 50% 20%;
+
+    --card: 240 50% 98%;
+    --card-foreground: 240 50% 20%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+
+    --primary: 340 90% 50%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 60 90% 60%;
+    --secondary-foreground: 240 5.9% 10%;
+
+    --muted: 180 40% 90%;
+    --muted-foreground: 180 5% 40%;
+
+    --accent: 200 90% 70%;
+    --accent-foreground: 240 5.9% 10%;
+
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5% 65%;
+  }
 }
 
 @layer base {
@@ -98,4 +129,20 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Image transition effects */
+.image-transition-enter {
+  opacity: 0;
+}
+.image-transition-enter-active {
+  opacity: 1;
+  transition: opacity 1000ms;
+}
+.image-transition-exit {
+  opacity: 1;
+}
+.image-transition-exit-active {
+  opacity: 0;
+  transition: opacity 1000ms;
 }

@@ -1,5 +1,7 @@
 
-import React from 'react';
+import React, { Suspense, useRef } from 'react';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls, useGLTF, Environment } from '@react-three/drei';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface ProductPreviewProps {
@@ -8,46 +10,84 @@ interface ProductPreviewProps {
   customText: string;
 }
 
+// 3D Model component
+const Model = ({ productType, customImage, customText }: ProductPreviewProps) => {
+  const group = useRef();
+  let modelPath = '';
+  
+  // We would have different model paths for different product types
+  // For now, we'll use placeholders
+  switch (productType) {
+    case 'tshirt':
+      modelPath = '/models/shirt.glb'; // This is a placeholder path
+      break;
+    case 'hoodie':
+      modelPath = '/models/hoodie.glb'; // This is a placeholder path
+      break;
+    case 'sleevie':
+      modelPath = '/models/sleevie.glb'; // This is a placeholder path
+      break;
+    case 'cap':
+      modelPath = '/models/cap.glb'; // This is a placeholder path
+      break;
+    default:
+      modelPath = '/models/shirt.glb';
+  }
+  
+  // Since we don't have actual models, we'll render a placeholder
+  return (
+    <group ref={group}>
+      <mesh>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial 
+          color={productType === 'tshirt' ? 'white' : 
+                 productType === 'hoodie' ? 'gray' : 
+                 productType === 'sleevie' ? 'lightblue' : 'red'} 
+        />
+      </mesh>
+      {customImage && (
+        <mesh position={[0, 0, 0.51]}>
+          <planeGeometry args={[0.8, 0.8]} />
+          <meshBasicMaterial map={new THREE.TextureLoader().load(customImage)} transparent />
+        </mesh>
+      )}
+      {customText && (
+        <mesh position={[0, -0.6, 0.51]}>
+          <planeGeometry args={[0.8, 0.2]} />
+          <meshBasicMaterial color="transparent" />
+          <Text 
+            position={[0, 0, 0.01]} 
+            fontSize={0.05}
+            color="black"
+          >
+            {customText}
+          </Text>
+        </mesh>
+      )}
+    </group>
+  );
+};
+
 export const ProductPreview = ({
   productType,
   customImage,
   customText
 }: ProductPreviewProps) => {
-  // This would be replaced with actual 3D rendering in a production app
   return (
     <div className="bg-white p-4 rounded-lg shadow">
       <h2 className="text-xl font-medium mb-4">Product Preview</h2>
       
-      <div className="aspect-square bg-gray-100 rounded-lg flex items-center justify-center mb-4">
-        {customImage ? (
-          <div className="relative w-full h-full">
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-lg font-medium text-gray-700">
-                {productType.toUpperCase()}
-              </span>
-            </div>
-            <img 
-              src={customImage} 
-              alt="Custom design" 
-              className="w-1/2 h-1/2 object-contain mx-auto"
-            />
-            {customText && (
-              <div className="absolute bottom-8 left-0 right-0 text-center">
-                <p className="text-sm font-medium bg-white/80 py-1 px-2 mx-auto inline-block">
-                  {customText.split('\n').map((line, i) => (
-                    <span key={i} className="block">{line}</span>
-                  ))}
-                </p>
-              </div>
-            )}
-          </div>
-        ) : (
-          <div className="text-center p-8">
-            <p className="text-gray-500">
-              Upload an image to see preview
-            </p>
-          </div>
-        )}
+      <div className="aspect-square bg-gray-100 rounded-lg mb-4">
+        <Suspense fallback={<Skeleton className="w-full h-full" />}>
+          <Canvas camera={{ position: [0, 0, 2], fov: 50 }}>
+            <ambientLight intensity={0.5} />
+            <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
+            <pointLight position={[-10, -10, -10]} />
+            <Model productType={productType} customImage={customImage} customText={customText} />
+            <OrbitControls enableZoom={true} enablePan={true} />
+            <Environment preset="city" />
+          </Canvas>
+        </Suspense>
       </div>
       
       <div>
